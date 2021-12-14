@@ -4,6 +4,9 @@
  * 
  * 特点是逻辑上相邻的数据元素, 其物理次序上也是相邻的
  * 只要确定了顺序储存的线性表的起始位置, 线性表的任一数据都可随机存取, 所以线性表的顺序储存结构是 随机存取 的储存结构
+ * 
+ * 插入, 删除时间复杂度为O(n)
+ * 查找时间复杂度为O(1)
  */
 
 
@@ -99,12 +102,14 @@ Status ListDelete(SqList *l, int i, ElemType *e) {
     if(i < 1 || i > l->length) {
         return ERROR;
     }
+
+    *e = l->elem[i-1];
+
     int j;
     for(j = i; j <= l->length; j++) {
         l->elem[j-1] = l->elem[j];
     }
     --(l->length);
-    *e = l->elem[j];
     return OK;
 }
 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        thead th, tfoot th {
+            text-align: center;
+            background: grey;
+            color: white;
+        }
+        tbody th {
+            text-align: right;
+            background: lightgrey;
+            color: grey;
+        }
+
+        [colspan], [rowspan] {
+            font-weight: bold;
+            border: medium solid black;
+        }
+        thead [colspan], tfoot [colspan] {
+            text-align: center;
+        }
+        caption {
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 5px;
+        }
+
+        #colgroup1 {
+            background-color: red;
+        }
+        #col3 {
+            background-color: green;
+            font-size: small;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Results of the 2011 Fruit Survey</caption>
+        <colgroup id="colgroup1" span="3"></colgroup>
+        <col id="collAnd2" span="2">
+        <col id="col3">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Color</th>
+                <th colspan="2">Size & Votes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Favorite:</th>
+                <td>Apple</td>
+                <td>Green</td>
+                <td>Medium</td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <th>2nd Favorite:</th>
+                <td>Orange</td>
+                <td>Yellow</td>
+                <td>Large</td>
+                <td>450</td>
+            </tr>
+            <tr>
+                <th>3rd Favorite:</th>
+                <td>Pomegranate</td>
+                <td colspan="2" rowspan="2">Green</td>
+                <td>200</td>
+            </tr>
+            <tr>
+                <th rowspan="2">4th:</th>
+                <td>Cherries</td>
+                <td rowspan="2">70</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="5">
+                    &copy: 2011 Adem
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

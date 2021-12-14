@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://titan:8080/form" method="post" autocomplete="off">
+        <input type="text" name="fave" autocomplete="on">
+        <input type="text" name="name">
+        
+        <input type="text" list="dtVal">
+
+        <textarea name="ta" cols="30" wrap="soft" rows="10"></textarea>
+        
+        <button>Submit</button>
+    </form>
+    <datalist id="dtVal">
+        <option value="1" label="value1"></option>
+        <option value="2">value2</option>
+        <option value="3"></option>
+    </datalist>
+</body>
+</html>
