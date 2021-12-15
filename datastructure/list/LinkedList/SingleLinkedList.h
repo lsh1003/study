@@ -29,4 +29,16 @@ Status GetElem(SingleLinkedList list, int index, ElemType *e);
 // 按值查找, 返回下标
 unsigned int LocateElem(SingleLinkedList list, ElemType e);
 
+// 按值查找, 返回结点
+Node *LocateElemGetNode(SingleLinkedList list, ElemType *e);
+
+// 插入
+Status InsertElem(SingleLinkedList list, int index, ElemType *e);
+
+// 根据下标来删除
+Status DeleteElemByIndex(SingleLinkedList list, int index);
+
+// 通过值来删除 结点
+Status DeleteElemByElem(SingleLinkedList list, ElemType *e);
+
 #endif
