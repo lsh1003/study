@@ -71,19 +71,19 @@ Status GetElem(SingleLinkedList list, int index, ElemType *e) {
  * e: 查找的值
  * 返回值: 查找的值在当前链表中的位置
  */
-unsigned int LocateElem(SingleLinkedList list, ElemType *e) {
+int LocateElem(SingleLinkedList list, ElemType e) {
     // 计数器
-    unsigned int returnVal = -1;
-    unsigned int curIdx = 1;
+    int returnVal = -1;
+    int curIdx = 1;
     Node *curNode = list->next;
 
-    while(curNode && (curNode->data != *e)) {
+    while(curNode && (curNode->data != e)) {
         curNode = curNode->next;
         curIdx++;
     }
 
     // curNode为NULL, 说明到头了, 还未找到
-    if(curNode && (curNode->data == *e)) {
+    if(curNode && (curNode->data == e)) {
         returnVal = curIdx;
     }
 
@@ -96,9 +96,9 @@ unsigned int LocateElem(SingleLinkedList list, ElemType *e) {
  * e: 查找的值
  * 返回值: 值相同的结点地址
  */
-Node *LocateElemGetNode(SingleLinkedList list, ElemType *e) {
+Node *LocateElemGetNode(SingleLinkedList list, ElemType e) {
     Node *curNode = list->next;
-    while(curNode && (curNode->data != *e)) {
+    while(curNode && (curNode->data != e)) {
         curNode = curNode->next;
     }
 
@@ -108,11 +108,12 @@ Node *LocateElemGetNode(SingleLinkedList list, ElemType *e) {
 /**
  * 任意位置插入
  */
-Status InsertElem(SingleLinkedList list, int index, ElemType *e) {
+Status InsertElem(SingleLinkedList list, int index, ElemType e) {
     // 首先要找到 index-1 位置上的结点(该位置的前驱结点)
     unsigned int curIdx = 0;
     Node *curNode = list;
 
+    // 插入算法的合法位置是1-n+1, 所以直接判断前驱是否存在就可以了, 有区别与删除算法
     while(curNode && curIdx < index-1) {
         curNode = curNode->next;
         curIdx++;
@@ -127,6 +128,7 @@ Status InsertElem(SingleLinkedList list, int index, ElemType *e) {
         return ERROR;
     }
 
+    tmp->data = e;
     // 新结点的指针域 指向 老的index位置的结点
     tmp->next = curNode->next;
     // index-1位置上的结点的指针域指向 新结点
@@ -142,12 +144,13 @@ Status DeleteElemByIndex(SingleLinkedList list, int index) {
     // 从头结点开始找
     unsigned int curIdx = 0;
     Node *curNode = list;
-    while(curNode && (curIdx < index-1)) {
+    // 这里使用curNode->next, 来判断 是由于删除算法的合法位置是1-n, 要判断删除的结点是否存在
+    while(curNode->next && (curIdx < index-1)) {
         curNode = curNode->next;
         curIdx++;
     }
 
-    if(!curNode || curIdx > index-1) {
+    if(!curNode->next || curIdx > index-1) {
         return ERROR;
     }
 
@@ -161,12 +164,12 @@ Status DeleteElemByIndex(SingleLinkedList list, int index) {
 /**
  * 根据值来删除
  */
-Status DeleteElemByElem(SingleLinkedList list, ElemType *e) {
+Status DeleteElemByElem(SingleLinkedList list, ElemType e) {
     // 首先找到值为*e的 前驱结点
     unsigned int curIdx = 0;
     Node *curNode = list;
     // 比较的是下一结点
-    while(curNode->next && (curNode->next->data != *e)) {
+    while(curNode->next && (curNode->next->data != e)) {
         curNode = curNode->next;
         curIdx++;
     }
@@ -190,10 +193,108 @@ void DestroyList(SingleLinkedList *list) {
     }
 }
 
+// 清空链表, 保留头结点, 将其他元素都清空
+void MakeEmpty(SingleLinkedList *list) {
+    Node *p, *q;
+    // 下一个要销毁的结点
+    p = (*list)->next;
+    (*list)->next = NULL;
+
+    while(p) {
+        q = p->next;
+        free(p);
+        p = q;
+    }
+}
+
+// 批量新建链表的两种方式
+// 第一种, 头插法
+Status CreateListByHead(SingleLinkedList *list, int n) {
+    // 先生成一个头结点
+    Node *tmp = (Node*)malloc(sizeof(Node));
+    if(!tmp) {
+        return ERROR;
+    }
+    // 生成带头结点的单链表了
+    tmp->next = NULL;
+    *list = tmp;
+
+    int i;
+    Node *np = NULL;
+    for(i =0; i < n; i++) {
+        np = (Node*)malloc(sizeof(Node));
+        if(!np) {
+            return ERROR;
+        }
+        // 头插法的要点
+        // 1. 要插入的新结点的指针域 指向 首元结点
+        np->next = (*list)->next;
+        // 2. 头结点的指针域 指向 新插入的结点
+        (*list)->next = np;
+    }
+
+    return OK;
+}
+
+// 第二种, 尾插法
+// 尾插法的话最好 生成一个 尾指针, 方便于操作
+Status CreateListByLast(SingleLinkedList *list, int n) {
+    // 先生成一个头结点
+    Node *tmp = (Node*)malloc(sizeof(Node));
+    if(!tmp) {
+        return ERROR;
+    }
+    // 生成带头结点的单链表
+    tmp->next = NULL;
+    *list = tmp;
+
+    // 尾指针, 初始时指向头结点
+    Node *lastNode = *list;
+    
+    int i;
+    Node *np = NULL;
+    for(i = 0; i < n; i++) {
+        np = (Node*)malloc(sizeof(Node));
+        if(!np) {
+            return ERROR;
+        }
+        // 1. 要插入的新结点 的指针域设置为NULL
+        np->next = NULL;
+        // 2. 尾指针 的指针域指向 新插入的结点(第一次的时候, 尾指针和头指针都是指向头结点, 所以在第一次时 新插入的结点就链接上了新插入的结点)
+        lastNode->next = np;
+        // 3. 向后移动尾指针指向新插入的结点
+        lastNode = np;
+    }
+    return OK;
+}
+
+// 翻转单链表
+// 其实就是 将链表头插法重新转换一遍
+void ReverseList(SingleLinkedList *list) {
+    Node *nodep, *tmp;
+    // 先将链表 头结点以外的 结点保存下来
+    nodep = (*list)->next;
+
+    // 将头结点的 指针域 置空, 作为反转后的单链表的头结点
+    (*list)->next = NULL;
+
+    // 取出 保存的链表的 第一个结点, 放到临时结点中
+    tmp = nodep;
+    nodep = nodep->next;
+    // 临时结点(要头插入到新链表中的结点), 指针域置为 新链表的首元结点
+    tmp->next = (*list)->next;
+    // 取出的结点放大新链表中
+    (*list)->next = tmp; 
+}
+
 int main() {
     SingleLinkedList list = NULL;
     // 1. 初始化单链表
     InitList(&list);
 
     printf("%d\n", ListIsEmpty(list));
-}
+
+    InsertElem(list, 1, 1);
+
+    printf("%d\n", ListIsEmpty(list));
+}   

@@ -23,22 +23,37 @@ Status InitList(SingleLinkedList *list);
 // 2. 判断链表是否为空, 通过判断头节点的指针域是否为空
 int ListIsEmpty(SingleLinkedList list);
 
+// 销毁链表
+void DestroyList(SingleLinkedList *list);
+
+// 清空链表, 保留头结点, 将其他元素都清空
+void MakeEmpty(SingleLinkedList *list);
+
 // 根据下标来取值
 Status GetElem(SingleLinkedList list, int index, ElemType *e);
 
 // 按值查找, 返回下标
-unsigned int LocateElem(SingleLinkedList list, ElemType e);
+int LocateElem(SingleLinkedList list, ElemType e);
 
 // 按值查找, 返回结点
-Node *LocateElemGetNode(SingleLinkedList list, ElemType *e);
+Node *LocateElemGetNode(SingleLinkedList list, ElemType e);
 
 // 插入
-Status InsertElem(SingleLinkedList list, int index, ElemType *e);
+Status InsertElem(SingleLinkedList list, int index, ElemType e);
 
 // 根据下标来删除
 Status DeleteElemByIndex(SingleLinkedList list, int index);
 
 // 通过值来删除 结点
-Status DeleteElemByElem(SingleLinkedList list, ElemType *e);
+Status DeleteElemByElem(SingleLinkedList list, ElemType e);
+
+// 头插入
+Status CreateListByHead(SingleLinkedList *list, int n);
+
+// 尾插入
+Status CreateListByLast(SingleLinkedList *list, int n);
+
+// 翻转链表
+void ReverseList(SingleLinkedList *list);
 
 #endif
